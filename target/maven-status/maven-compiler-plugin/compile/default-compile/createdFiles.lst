@@ -1,6 +1,9 @@
 com\webstore\model\OrderProduct.class
+com\webstore\configs\DatabaseConfig.class
+com\webstore\model\Product.class
+com\webstore\services\ProductDao.class
 com\webstore\ws\api\ProductController.class
 com\webstore\ws\Application.class
+com\webstore\controllers\MainController.class
 com\webstore\model\Order.class
-com\webstore\model\Product.class
 com\webstore\ws\api\OrderController.class
