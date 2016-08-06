@@ -1,3 +1,6 @@
 C:\webStore\webStoreProject\src\main\java\com\webstore\ws\Application.java
 C:\webStore\webStoreProject\src\main\java\com\webstore\model\Product.java
 C:\webStore\webStoreProject\src\main\java\com\webstore\ws\api\ProductController.java
+C:\webStore\webStoreProject\src\main\java\com\webstore\model\Order.java
+C:\webStore\webStoreProject\src\main\java\com\webstore\model\OrderProduct.java
+C:\webStore\webStoreProject\src\main\java\com\webstore\ws\api\OrderController.java

@@ -27,6 +27,14 @@ public class ProductController {
     
     private static List<Product> products= new ArrayList<Product>();
 
+    public static void setProducts(List<Product> products) {
+        ProductController.products = products;
+    }
+
+    public static List<Product> getProducts() {
+        return products;
+    }
+
     static{
           products.add(new Product(1,"Product1",20.00));
           products.add(new Product(2,"Product2",10.00));
