@@ -5,16 +5,30 @@
  */
 package com.webstore.model;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  *
  * @author WeiliangOuyang
  */
-public class Product {
+@Entity
+public class Product implements Serializable{
+    @Id
+    @GeneratedValue
     private int productId;
     private String name;
     private double price;
     Product() {
     }
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+    
     public Product(int productId, String name, double price) {
         this.productId = productId;
         this.name = name;

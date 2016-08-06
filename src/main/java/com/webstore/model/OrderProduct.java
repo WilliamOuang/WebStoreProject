@@ -5,14 +5,51 @@
  */
 package com.webstore.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author WeiliangOuyang
  */
-public class OrderProduct {
+@Entity
+public class OrderProduct implements Serializable{
+    @Id
+    @GeneratedValue
+    private int id;
+    
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    @JsonBackReference("user-coordinate")
+    private Order order;
+ 
+    @OneToOne
     private Product p;
+    public OrderProduct() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
     private int quantity;
     private double orderPrice;
     private Long orderTime;

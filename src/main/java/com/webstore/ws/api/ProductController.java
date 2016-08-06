@@ -6,9 +6,11 @@
 package com.webstore.ws.api;
 
 import com.webstore.model.Product;
+import com.webstore.services.ProductDao;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,48 +27,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductController {
     
-    private static List<Product> products= new ArrayList<Product>();
-
-    public static void setProducts(List<Product> products) {
-        ProductController.products = products;
-    }
+    @Autowired
+     ProductDao _productDao;
 
     public static List<Product> getProducts() {
-        return products;
+        return null;
     }
-
-    static{
-          products.add(new Product(1,"Product1",20.00));
-          products.add(new Product(2,"Product2",10.00));
-    }
-      
-    
+   
     @RequestMapping(value = "/api/products",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<Product>> getAllProduct() {
 
-        return new ResponseEntity<Collection<Product>>(products, HttpStatus.OK);
+        return new ResponseEntity<Collection<Product>>(_productDao.getAllProduct(), HttpStatus.OK);
     }
     
     Product findProduct(int id){
-        
-        for( int i = 0; i <products.size();i++ ){
-            Product p = products.get(i);
-             if(p.getProductId()==id){
-        
-                return p;
-            }
-        }
-       
-        return null;
+        return _productDao.getById(id);
     }
     
     
     @RequestMapping(value = "/api/products/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> getProduct(@PathVariable final int id) {
+    public ResponseEntity<Product> getProduct(@PathVariable int id) {
 
-        final Product p =findProduct(id);
+        final Product p =_productDao.getById(id);
         if (p == null) {
             return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
         }
@@ -78,9 +62,7 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> createProduct(@RequestBody  Product p) {
-            p.setProductId(products.size()+1);
-            products.add(p);
-
+     _productDao.save(p);
         return new ResponseEntity<Product>(p, HttpStatus.CREATED);
     }
     
@@ -90,10 +72,7 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> updateProduct(@RequestBody  Product p) {
 
-            
-            Product pro =findProduct(p.getProductId());
-            products.remove(pro);
-            products.add(p);
+            _productDao.update(p);
             
         return new ResponseEntity<Product>(p, HttpStatus.CREATED);
     }
@@ -104,7 +83,7 @@ public class ProductController {
     public ResponseEntity<Product> deleteProduct(@PathVariable("id") int id) {
 
         Product pro =findProduct(id);
-        products.remove(pro);
+        _productDao.delete(pro);
 
         return new ResponseEntity<Product>(HttpStatus.NO_CONTENT);
     }

@@ -7,9 +7,12 @@ package com.webstore.ws.api;
 
 import com.webstore.model.Order;
 import com.webstore.model.OrderProduct;
+import com.webstore.model.Product;
+import com.webstore.services.OrderDao;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,46 +30,48 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     
     private static    List<Order> orderList= new ArrayList<Order>();
-
+ 
     static{
-        OrderProduct o = new OrderProduct();
-            o.setP(ProductController.getProducts().get(0));
-            o.setQuantity(1);
-            o.setOrderPrice(ProductController.getProducts().get(0).getPrice());
-            o.setOrderTime(System.currentTimeMillis());
-            
-        OrderProduct o1 = new OrderProduct();
-            o1.setP(ProductController.getProducts().get(1));
-            o1.setOrderPrice(ProductController.getProducts().get(1).getPrice());
-            o1.setOrderTime(System.currentTimeMillis());
-        
-        List<OrderProduct> orders= new ArrayList<OrderProduct>();
-            orders.add(o);
-            orders.add(o1);
-
-        Order order= new Order();
-            order.setOrderId(1);
-            order.setCheckOut(false);
-            order.setOrderName("Order01");
-            order.setList(orders);
-            
-        orderList.add(order);
+//     Product p =   new Product(1,"dd",2);
+//        OrderProduct o = new OrderProduct();
+//            o.setP(p);
+//            o.setQuantity(1);
+//            o.setOrderPrice(p.getPrice());
+//            o.setOrderTime(System.currentTimeMillis());
+//            
+//        OrderProduct o1 = new OrderProduct();
+//            o1.setP(p);
+//            o1.setOrderPrice(p.getPrice());
+//            o1.setOrderTime(System.currentTimeMillis());
+//        
+//        List<OrderProduct> orders= new ArrayList<OrderProduct>();
+//            orders.add(o);
+//            orders.add(o1);
+//
+//        Order order= new Order();
+//            order.setOrderId(1);
+//            order.setCheckOut(false);
+//            order.setOrderName("Order01");
+//            order.setList(orders);
+//            
+//        orderList.add(order);
     }
+    
+    
+    @Autowired
+    OrderDao orderDao;
       
-    Order findOrder(long id){
-        
-        for( int i = 0; i <orderList.size();i++ ){
-            Order o = orderList.get(i);
-             if(o.getOrderId()==id){
-                return o;
-            }
-        }
-       
-        return null;
-    }
+ 
     @RequestMapping(value = "/api/orders",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<Order>> getOrderList() {
-        return new ResponseEntity<Collection<Order>>(orderList, HttpStatus.OK);
+        return new ResponseEntity<Collection<Order>>(orderDao.getAllOrder(), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/api/orders/{id}",
+            method = RequestMethod.GET)
+    public ResponseEntity<Order> getOrder(@PathVariable("id") int id) {
+
+        Order ord =orderDao.getOneOrder(id);
+        return new ResponseEntity<Order>(ord,HttpStatus.NO_CONTENT);
     }
     
     
@@ -76,13 +81,9 @@ public class OrderController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order> createOrder(@RequestBody  Order o) {
-            o.setOrderId(orderList.size()+1);
-            orderList.add(o);
-            List<OrderProduct> orders =o.getList();
-            for(int i=0;i<orders.size();i++){
-                OrderProduct op =orders.get(i);
-                op.setOrderTime(System.currentTimeMillis());
-            }
+        
+            orderDao.saveOrder(o);
+
         return new ResponseEntity<Order>(o, HttpStatus.CREATED);
     }
     
@@ -94,44 +95,20 @@ public class OrderController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order> confirmOrder(@RequestBody  Order o) {
-            Order order =findOrder(o.getOrderId());
-            orderList.remove(order);
-            o.setOrderId(order.getOrderId());
-          //  Compare Create time
-          
-            orderList.add(o);
             
-        return new ResponseEntity<Order>(order, HttpStatus.CREATED);
-    }
-
-    
-    
-    @RequestMapping(value = "/api/orders",
-            method = RequestMethod.PUT,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Order> updateOrder(@RequestBody  Order o) {
-            
-            Order order =findOrder(o.getOrderId());
-            orderList.remove(order);
-            o.setOrderId(order.getOrderId());
-            orderList.add(o);
-        
-            List<OrderProduct> orders =o.getList();
-            for(int i=0;i<orders.size();i++){
-                OrderProduct op =orders.get(i);
-                op.setOrderTime(System.currentTimeMillis());
-            }
-        return new ResponseEntity<Order>(order, HttpStatus.CREATED);
+       Order update=   orderDao.updateOrder(o);
+       
+       return new ResponseEntity<Order>(update, HttpStatus.CREATED);
     }
     
+    
+  
     @RequestMapping(value = "/api/orders/{id}",
             method = RequestMethod.DELETE)
     public ResponseEntity<Order> deleteOrder(@PathVariable("id") int id) {
-
-        Order ord =findOrder(id);
-        orderList.remove(ord);
-
+        
+        Order ord =orderDao.getOneOrder(id);
+        orderDao.deleteOrder(ord);
         return new ResponseEntity<Order>(HttpStatus.NO_CONTENT);
     }
 }

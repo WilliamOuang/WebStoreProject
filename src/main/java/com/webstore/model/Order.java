@@ -5,27 +5,48 @@
  */
 package com.webstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import org.hibernate.annotations.Proxy;
 
 /**
  *
  * @author WeiliangOuyang
  */
-public class Order {
-    
-    private long orderId;
-    private List<OrderProduct> list;
+@Entity
+@Table(name = "ordert")
+@JsonIgnoreProperties(ignoreUnknown = false)
+@Proxy(lazy = false)
+public class Order implements Serializable{
+
+    @Id
+    @GeneratedValue
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    @OneToMany(fetch = FetchType.LAZY,mappedBy="order")
+     @JsonManagedReference("user-coordinate")
+    private List<OrderProduct> list = new ArrayList();
     private String orderName;
     private boolean checkOut;
-
-    public long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
-    }
-
+    
+    @JsonIgnore
     public List<OrderProduct> getList() {
         return list;
     }
@@ -53,7 +74,7 @@ public class Order {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 53 * hash + (int) (this.orderId ^ (this.orderId >>> 32));
+        hash = 53 * hash + (int) (this.id ^ (this.id >>> 32));
         return hash;
     }
 
@@ -69,7 +90,7 @@ public class Order {
             return false;
         }
         final Order other = (Order) obj;
-        if (this.orderId != other.orderId) {
+        if (this.id != other.id) {
             return false;
         }
         return true;
