@@ -8,6 +8,7 @@ package com.webstore.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class OrderProduct implements Serializable{
     @GeneratedValue
     private int id;
     
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.ALL })
     @JoinColumn(name = "order_id")
     @JsonBackReference("user-coordinate")
     private Order order;

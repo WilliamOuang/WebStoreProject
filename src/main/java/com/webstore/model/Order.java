@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,7 +41,7 @@ public class Order implements Serializable{
     public void setId(int id) {
         this.id = id;
     }
-    @OneToMany(fetch = FetchType.LAZY,mappedBy="order")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy="order",cascade = { CascadeType.ALL })
      @JsonManagedReference("user-coordinate")
     private List<OrderProduct> list = new ArrayList();
     private String orderName;

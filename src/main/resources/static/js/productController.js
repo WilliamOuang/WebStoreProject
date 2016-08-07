@@ -76,8 +76,8 @@ myApp.controller('productController', ['$scope', '$http', '$location', '$routePa
             orderList.orderName="Order"+t;
            
             $http.post('/api/orders/', orderList).success(function(response){
-                
-                        //window.location.href='#/confirmOrder';
+                $scope.showback=response;
+                        //window.location.href='#/listOrder';
 			//window.location.href='#/confirmOrder';
 		}); 
         }
@@ -93,12 +93,15 @@ myApp.controller('productController', ['$scope', '$http', '$location', '$routePa
                 order.push(list)
             });	
             orderList.list=order;
-            orderList.checkOut="false";
-            //orderList.orderId='19'
-//             $http.put('/api/confirmOrder/', orderList).success(function(response){
-//                        //window.location.href='#/confirmOrder';
-//			//window.location.href='#/confirmOrder';
-//		}); 
+            orderList.checkOut="true";
+            orderList.orderName=$scope.showback.orderName;
+            orderList.id =$scope.showback.id;
+            //$scope.putData=orderList;
+             $http.put('/api/confirmOrder/', orderList).success(function(response){
+                        $scope.confirmshowback=response;
+                        window.location.href='#/listOrder';
+			
+		}); 
         }
 	
 }]);

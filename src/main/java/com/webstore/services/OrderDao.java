@@ -53,16 +53,19 @@ public class OrderDao {
     }
     
     public Order updateOrder(Order o) {
-            List<OrderProduct> orders =o.getList();
-            o.setList(orders);
-            getSession().update(o);
-            for(int i=0;i<orders.size();i++){
+      Order order=  (Order) getSession().createQuery("select distinct order1 from Order order1 join order1.list ordproduct join ordproduct.p product where order1.id=:id").setParameter("id", o.getId()).list().get(0);;
+        List<OrderProduct> orders =order.getList();
+        for(int i=0;i<orders.size();i++){
                 OrderProduct op =orders.get(i);
                 op.setOrderTime(System.currentTimeMillis());
                 op.setOrder(o);
-                getSession().saveOrUpdate(op);
-            }
-            return o;
+
+               getSession().merge(op);
+       }
+        //order.setList(null);
+          getSession().merge(order);
+          getSession().update(order);
+         return o;
     }
     
        public void deleteOrder(Order o) {
