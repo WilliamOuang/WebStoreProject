@@ -1,0 +1,40 @@
+
+
+
+<div class="container" ng-controller="orderController" ng-init="getAllOrder();getOrderList();">
+ <script>
+ 
+</script>
+    
+   <div ng-bind-html="myText"></div>      
+
+    
+  <div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Order Name</th>
+        <th>IsCheckOut</th>
+        <th>Product</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="o in orders">
+        <td>{{ o.id }}</td>
+        <td>{{ o.orderName }}</td>
+        <td>{{ o.checkOut }}</td>
+        <td>
+        {{searchProduct(o.id)}}
+            
+             
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger" ng-click=""> Delete</button>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+  </div>
+</div>

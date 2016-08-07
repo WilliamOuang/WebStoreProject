@@ -10,7 +10,22 @@ myApp.controller('productController', ['$scope', '$http', '$location', '$routePa
 			$scope.products = response;
 		});
 	}
-
+        $scope.getProduct = function(){
+		var id = $routeParams.id;
+		$http.get('/api/products/'+id).success(function(response){
+			$scope.product = response;
+		});
+	}
+       $scope.updateProduct = function(){
+		$http.put('/api/products/', $scope.product).success(function(response){
+			window.location.href='#/listProduct';
+		});
+	} 
+       $scope.deleteProduct = function(id){
+		$http.delete('/api/products/'+id).success(function(response){
+                    window.location.href='#/listProduct';
+		});
+	}
 	$scope.addProduct = function(){
 		$http.post('/api/products/', $scope.product).success(function(response){
 			window.location.href='/order.html';
@@ -42,7 +57,10 @@ myApp.controller('productController', ['$scope', '$http', '$location', '$routePa
             });	
             orderList.list=order;
             orderList.checkOut="false";
-            orderList.orderName="xxxx";
+                var d=new Date();
+                var t=d.getTime();
+                
+            orderList.orderName="Order"+t;
            
             $http.post('/api/orders/', orderList).success(function(response){
 			window.location.href='/order.html';

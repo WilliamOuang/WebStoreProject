@@ -30,6 +30,9 @@ public class OrderDao {
     public List<Order> getAllOrder() {
         return getSession().createQuery("select distinct order1 from Order order1").list();
     }
+    public List<Order> getAllList() {
+        return getSession().createQuery("select distinct order1,ordproduct,product from Order order1 join order1.list ordproduct  join ordproduct.p product order by order1.id ").list();
+    }
     //  List one Order
     public Order getOneOrder( int id) {
         return (Order) getSession().createQuery("select distinct order1 from Order order1 where order1.id=:id").setParameter("id", id).list().get(0);

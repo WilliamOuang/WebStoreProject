@@ -11,7 +11,7 @@
     				<h4>{{pro.name}}</h4>
     				<p>{{pro.price}}</p>
                                  <p>
-                                    <input type="text" class="form-control" ng-model="pro.quantity" placeholder="Quantity">
+                                    <input type="number"   min="0" max="99" class="form-control"  ng-init="pro.quantity=1" ng-model="pro.quantity" placeholder="Quantity" required>
                                 </p>
                                 <a class="btn btn-primary" ng-click="addToCart(pro)" >Order</a>
     			</div>
@@ -36,13 +36,14 @@
                 <div class="col-md-6">
     				<h4>{{pro.name}}</h4>
     				<p>{{pro.price}}</p>
-                                    <input type="text" class="form-control" ng-model="pro.quantity" placeholder="Quantity">
-                                <a class="btn btn-primary" ng-click="removeToCart(pro)" >Remove</a>
+                                <input type="number"   min="0" max="99" class="form-control"  ng-init="pro.quantity=1" ng-model="pro.quantity" placeholder="Quantity" required>
+                                <br/>
+                                <button type="button" class="btn btn-warning btn-xs"  ng-click="removeToCart(pro)" >Remove</button>
     			</div>
             </div>
    </div>
 </div>
       
    <div class="panel-heading">
-    <h3 class="panel-title"><a class="btn btn-primary" ng-click="createOrder()" > Create Order</a></h3>
+    <h3 class="panel-title"><a class="btn btn-success" ng-click="createOrder()" > Create Order</a></h3>
   </div>

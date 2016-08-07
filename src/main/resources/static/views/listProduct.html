@@ -1,0 +1,31 @@
+
+
+
+<div class="container" ng-init="getProducts()">
+  <div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="p in products">
+        <td>{{ p.productId }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.price }}</td>
+        <td>
+            <a class="btn btn-primary" href="#/editproduct/{{p.productId}}">Edit</a>
+           </td>
+        <td>
+            <button type="button" class="btn btn-danger" ng-click="deleteProduct(p.productId)"> Delete</button>
+            </td>
+    </tr>
+    </tbody>
+  </table>
+  </div>
+</div>

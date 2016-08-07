@@ -66,6 +66,11 @@ public class OrderController {
     public ResponseEntity<Collection<Order>> getOrderList() {
         return new ResponseEntity<Collection<Order>>(orderDao.getAllOrder(), HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/api/orderList",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<Order>> getOrder() {
+        return new ResponseEntity<Collection<Order>>(orderDao.getAllList(), HttpStatus.OK);
+    }
     @RequestMapping(value = "/api/orders/{id}",
             method = RequestMethod.GET)
     public ResponseEntity<Order> getOrder(@PathVariable("id") int id) {
