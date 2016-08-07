@@ -8,13 +8,13 @@ package com.webstore.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import org.hibernate.annotations.Cascade;
 
 /**
  *
@@ -26,7 +26,8 @@ public class OrderProduct implements Serializable{
     @GeneratedValue
     private int id;
     
-    @ManyToOne(cascade = { CascadeType.ALL })
+    @ManyToOne
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     @JoinColumn(name = "order_id")
     @JsonBackReference("user-coordinate")
     private Order order;

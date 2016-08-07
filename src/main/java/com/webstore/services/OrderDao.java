@@ -22,8 +22,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Transactional
 public class OrderDao {
-        @Autowired
+    @Autowired
     private SessionFactory _sessionFactory;
+    
+    @Autowired
+    ProductDao productDao;
+    
     private Session getSession() {
         return _sessionFactory.getCurrentSession();
     }
@@ -41,6 +45,7 @@ public class OrderDao {
     public Order saveOrder(Order o) {
             List<OrderProduct> orders =o.getList();
             o.setList(orders);
+            o.setOrderTime(System.currentTimeMillis());
             getSession().save(o);
             for(int i=0;i<orders.size();i++){
                 OrderProduct op =orders.get(i);
@@ -48,23 +53,38 @@ public class OrderDao {
                 op.setOrder(o);
                 getSession().save(op);
             }
-            
+             
             return o;
     }
     
     public Order updateOrder(Order o) {
-      Order order=  (Order) getSession().createQuery("select distinct order1 from Order order1 join order1.list ordproduct join ordproduct.p product where order1.id=:id").setParameter("id", o.getId()).list().get(0);;
-        List<OrderProduct> orders =order.getList();
-        for(int i=0;i<orders.size();i++){
-                OrderProduct op =orders.get(i);
-                op.setOrderTime(System.currentTimeMillis());
-                op.setOrder(o);
+//        Long orderTime;
+// Order order=  (Order) getSession().createQuery("select distinct order1 from Order order1 join order1.list ordproduct join ordproduct.p product where order1.id=:id").setParameter("id", o.getId()).list().get(0);;
+//        List<OrderProduct> orders =order.getList();
+//      //  for(int i=0;i<orders.size();i++){
+//              OrderProduct optime =orders.get(0);
+//              orderTime=optime.getOrderTime();
+//      //  }
 
-               getSession().merge(op);
-       }
-        //order.setList(null);
-          getSession().merge(order);
-          getSession().update(order);
+      List<OrderProduct> updateorders =o.getList();
+        
+      for(int i=0;i<updateorders.size();i++){
+                OrderProduct op =updateorders.get(i);
+               
+                op.setOrder(o);
+                op.setOrderTime(o.getOrderTime());
+                // Step 5 for getting Updated Porduct price
+                if(System.currentTimeMillis()-op.getOrderTime()>1000*60){
+                      op.setOrderTime(System.currentTimeMillis());
+                    op.setOrderPrice(productDao.getById(op.getP().getProductId()).getPrice());
+                }
+                op.setOrderTime(System.currentTimeMillis());
+
+                getSession().save(op);
+      }
+        o.setList(updateorders);
+
+        getSession().update(o);
          return o;
     }
     

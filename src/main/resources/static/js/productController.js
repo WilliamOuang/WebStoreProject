@@ -95,6 +95,7 @@ myApp.controller('productController', ['$scope', '$http', '$location', '$routePa
             orderList.list=order;
             orderList.checkOut="true";
             orderList.orderName=$scope.showback.orderName;
+            orderList.orderTime=$scope.showback.orderTime;
             orderList.id =$scope.showback.id;
             //$scope.putData=orderList;
              $http.put('/api/confirmOrder/', orderList).success(function(response){
