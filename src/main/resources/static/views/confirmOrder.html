@@ -1,0 +1,24 @@
+
+   <div class="panel panel-default" ng-init="">
+  <div class="panel-heading">
+    <h3 class="panel-title">Confirm Order List</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+        <div ng-repeat="pro in orderList">
+            <div class="col-sm-4">
+                
+                <div class="col-md-6">
+    				<h4>{{pro.name}}</h4>
+    				<p>{{pro.price}}</p>
+                                <input type="number"   min="0" max="99" class="form-control"  ng-init="pro.quantity=1" ng-model="pro.quantity" placeholder="Quantity" required>
+                                <br/>
+                                <button type="button" class="btn btn-warning btn-xs"  ng-click="removeToCart(pro)" >Remove</button>
+    			</div>
+            </div>
+   </div>
+</div>
+      
+   <div class="panel-heading">
+    <h3 class="panel-title"><a class="btn btn-success" ng-click="" > Confirm Order</a></h3>
+  </div>

@@ -4,7 +4,20 @@
 var myApp = angular.module('myApp');
 
 myApp.controller('productController', ['$scope', '$http', '$location', '$routeParams', function($scope, $http, $location, $routeParams){
-
+        $scope.orderListPanel=true;
+        $scope.confirmPanel=false;
+        $scope.showOrderList = function(){
+            $scope.orderListPanel=true;
+       }
+       $scope.hideconfirmPanel = function(){
+            $scope.confirmPanel=false;
+       }
+        $scope.showconfirmPanel = function(){
+            $scope.confirmPanel=true;
+       }
+       $scope.hideOrderList = function(){
+            $scope.orderListPanel=false;
+       }
 	$scope.getProducts = function(){
 		$http.get('/api/products').success(function(response){
 			$scope.products = response;
@@ -63,9 +76,29 @@ myApp.controller('productController', ['$scope', '$http', '$location', '$routePa
             orderList.orderName="Order"+t;
            
             $http.post('/api/orders/', orderList).success(function(response){
-			window.location.href='/order.html';
+                
+                        //window.location.href='#/confirmOrder';
+			//window.location.href='#/confirmOrder';
 		}); 
         }
-        
+        $scope.confirmOrder= function(){
+                            var orderList={};
+            
+            var order=[];
+            angular.forEach($scope.orderList, function(x) {
+                var list={};
+                list.p=x;
+                list.quantity=x.quantity;
+                list.orderPrice=x.price;
+                order.push(list)
+            });	
+            orderList.list=order;
+            orderList.checkOut="false";
+            //orderList.orderId='19'
+//             $http.put('/api/confirmOrder/', orderList).success(function(response){
+//                        //window.location.href='#/confirmOrder';
+//			//window.location.href='#/confirmOrder';
+//		}); 
+        }
 	
 }]);

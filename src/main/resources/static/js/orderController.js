@@ -2,8 +2,11 @@
  * http://usejsdoc.org/
  */
 
-myApp.controller('orderController', ['$scope', '$http', '$location', '$routeParams', function($scope, $http, $location, $routeParams){
-$scope.orderList1=[];
+myApp.controller('orderController', ['$scope', '$http', '$location', '$routeParams', function($scope, $http, $location, $routeParams, $sce){
+        $scope.orderList1=[];
+        $scope.renderHtml = function (htmlCode) {
+            return $sce.trustAsHtml(htmlCode);
+        };
 	$scope.getAllOrder = function(){
 		$http.get('/api/orders').success(function(response){
 			$scope.orders = response;
@@ -17,20 +20,23 @@ $scope.orderList1=[];
                 });
 	}
         
-        $scope.myText = "<h1>HTML display</h1>";	
 
         $scope.searchProduct= function(orderid){
-              var str="";
+            
+            var str="<table class='table'><thead><tr><th>Name</th><th>Order Price </th><th> Quantity </th></tr></thead><tbody>";
+ 
+              
         //alert($scope.orderList1.length);
         for(var i=0;i<$scope.orderList1.length;i++){
           
             if($scope.orderList1[i][0].id==orderid){
-                str+=$scope.orderList1[i][1].p.name +"_";
-                str+=$scope.orderList1[i][1].orderPrice+"_";
-                str+=$scope.orderList1[i][1].quantity;
-                str+="    ";
+                str+="<tr class='success'> <td>"+$scope.orderList1[i][1].p.name +"</td> ";
+                str+="<td>"+$scope.orderList1[i][1].orderPrice +"</td> ";
+                str+="<td>"+$scope.orderList1[i][1].quantity +"</td></tr> ";
+                str+="";
             }
             }
+               str+="</tbody> </table>   ";
             return str;
 	}
 
@@ -40,6 +46,6 @@ $scope.orderList1=[];
 			$scope.order = response;
 		});
 	}
-        
 	
 }]);
+

@@ -1,7 +1,7 @@
 /**
  * http://usejsdoc.org/
  */
-var myApp = angular.module('myApp',['ngRoute']);
+var myApp = angular.module('myApp',['ngRoute','ngSanitize']);
 
 myApp.config(function($routeProvider){
 	$routeProvider
@@ -20,6 +20,9 @@ myApp.config(function($routeProvider){
 	}).when('/listOrder', {
 		controller:'orderController',
 		templateUrl: 'views/listOrder.html'
+	}).when('/confirmOrder', {
+		controller:'productController',
+		templateUrl: 'views/confirmOrder.html'
 	})
         
 	.otherwise({
@@ -27,7 +30,12 @@ myApp.config(function($routeProvider){
 	});
 });
 
-
+myApp.filter("sanitize", ['$sce', function($sce) {
+  return function(htmlCode){
+    return $sce.trustAsHtml(htmlCode);
+  }
+}]);
+myApp.filter('unsafe', function($sce) { return $sce.trustAsHtml; });
 myApp.filter('myFormat', function() {
     return function(x) {
         return x;
